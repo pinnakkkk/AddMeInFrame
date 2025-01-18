@@ -139,8 +139,8 @@ def main():
         scaler = None
         
     if LOAD_MODEL:
-        load_checkpoint(torch.load("unet_test1.pth.tar"))
-        
+        load_checkpoint(torch.load("unet_test1.pth.tar"), model, optimizer)
+    
     for epoch in range(NUM_EPOCHS):
         
         train_fn(train_loader, model, optimizer, loss_fn, scaler)
