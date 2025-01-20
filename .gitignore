@@ -170,10 +170,11 @@ cython_debug/
 # PyPI configuration file
 .pypirc
 
-# dataset & valuation
-Processed-Dataset/*
-data/*
-saved_images/*
+# dataset 
+datasets/*
+
+# logs
+wandb/*
 
 # checkpoints
 *.tar
