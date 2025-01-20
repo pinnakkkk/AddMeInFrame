@@ -8,10 +8,10 @@ class DoubleConv(nn.Module):
         self.conv = nn.Sequential(
             nn.Conv2d(in_channels, out_channels, 3, 1, 1, bias=False),
             nn.BatchNorm2d(out_channels),
-            nn.ReLU(inplace=True),
+            nn.SiLU(inplace=True),
             nn.Conv2d(out_channels, out_channels, 3, 1, 1, bias=False),
             nn.BatchNorm2d(out_channels),
-            nn.ReLU(inplace=True),
+            nn.SiLU(inplace=True),
         )
 
     def forward(self, x):
@@ -19,7 +19,7 @@ class DoubleConv(nn.Module):
 
 class UNET(nn.Module):
     def __init__(
-            self, in_channels=3, out_channels=1, features=[64, 128, 256, 512],
+            self, in_channels=3, out_channels=1, features=[16, 32, 64, 128, 256, 512],
     ):
         super(UNET, self).__init__()
         self.ups = nn.ModuleList()
