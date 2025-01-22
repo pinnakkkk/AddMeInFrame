@@ -1,19 +1,33 @@
 from pathlib import Path
 import shutil
 import os
+import argparse
 
-IMAGES_DIR = "/Users/lazylinuxer/MachineLearning/Google's-Addme/data/images/"
-MASKS_DIR = "/Users/lazylinuxer/MachineLearning/Google's-Addme/data/labels/"
-
-BASE_DIR = "/Users/lazylinuxer/MachineLearning/Google's-Addme/Processed-DataSet/"
+images_path = None
+labels_path = None
+output_path = None
 
 TRAIN_RATIO = 0.8
 VAL_RATIO = 0.1 
 
+def get_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-i", "--images_path", type=Path, required=True, help="Path to input data folder")
+    parser.add_argument("-l", "--labels_path", type=Path, required=True, help="Path to labels data folder")
+    parser.add_argument("-o", "--output_path", type=Path, required=True, help="Path to output data folder")
+    return parser.parse_args()
+
 def main():
-    if Path(IMAGES_DIR).exists and Path(MASKS_DIR).exists:
+    args = get_args()
+    
+    global images_path, labels_path, output_path
+    images_path = args.images_path
+    labels_path = args.labels_path
+    output_path = args.output_path
+
+    if images_path.exists and labels_path.exists:
         
-        images_list = os.listdir(Path(IMAGES_DIR))
+        images_list = os.listdir(images_path)
         
         total_size = len(images_list)
         
@@ -29,42 +43,41 @@ def main():
         test_images = images_list[train_size + val_size:]
         test_masks = images_list[train_size + val_size:]
                 
-        train_images_output_folder =  BASE_DIR + "train_images"
-        Path(train_images_output_folder).mkdir(exist_ok=True, parents=True)
+        train_images_output_path =  output_path/"train"/"images"
+        train_images_output_path.mkdir(exist_ok=True, parents=True)
     
-        train_masks_output_folder = BASE_DIR + "train_labels"
-        Path(train_masks_output_folder).mkdir(exist_ok=True, parents=True)
+        train_masks_output_folder = output_path/"train"/"labels"
+        train_masks_output_folder.mkdir(exist_ok=True, parents=True)
         
-        val_images_output_folder =  BASE_DIR + "val_images"
-        Path(val_images_output_folder).mkdir(exist_ok=True, parents=True)
+        val_images_output_folder =  output_path/"val"/"images"
+        val_images_output_folder.mkdir(exist_ok=True, parents=True)
     
-        val_masks_output_folder = BASE_DIR + "val_labels"
-        Path(val_masks_output_folder).mkdir(exist_ok=True, parents=True)
+        val_masks_output_folder = output_path/"val"/"labels"
+        val_masks_output_folder.mkdir(exist_ok=True, parents=True)
 
-        test_images_output_folder =  BASE_DIR + "test_images"
-        Path(test_images_output_folder).mkdir(exist_ok=True, parents=True)
+        test_images_output_folder =  output_path/"test"/"images"
+        test_images_output_folder.mkdir(exist_ok=True, parents=True)
     
-        test_masks_output_folder = BASE_DIR + "test_labels"
-        Path(test_masks_output_folder).mkdir(exist_ok=True, parents=True)
+        test_masks_output_folder = output_path/"test"/"labels"
+        test_masks_output_folder.mkdir(exist_ok=True, parents=True)
         
         for idx in range (0, len(train_images)):
             
-            train_img = Path(Path.joinpath(Path(IMAGES_DIR), train_images[idx]))
-            train_mask = Path(Path.joinpath(Path(MASKS_DIR), train_masks[idx].replace('.jpg', '.png')))
+            train_img = images_path/train_images[idx]
+            train_mask = labels_path/train_masks[idx].replace('.jpg', '.png')
             
             shutil.copy(
                 train_img, 
-                str(train_images_output_folder))
+                str(train_images_output_path))
             
             shutil.copy(
                 train_mask, 
                 str(train_masks_output_folder))
             
-        
         for idx in range (0, len(val_images)):
             
-            val_img = Path(Path.joinpath(Path(IMAGES_DIR), val_images[idx]))
-            val_mask = Path(Path.joinpath(Path(MASKS_DIR), val_masks[idx].replace('.jpg', '.png')))
+            val_img = images_path/val_images[idx]
+            val_mask = labels_path/val_masks[idx].replace('.jpg', '.png')
             
             shutil.copy(
                 val_img, 
@@ -77,8 +90,8 @@ def main():
         
         for idx in range (0, len(val_images)):
             
-            test_img = Path(Path.joinpath(Path(IMAGES_DIR), test_images[idx]))
-            test_mask = Path(Path.joinpath(Path(MASKS_DIR), test_masks[idx].replace('.jpg', '.png')))
+            test_img = images_path/test_images[idx]
+            test_mask = labels_path/test_masks[idx].replace('.jpg', '.png')
             
             shutil.copy(
                 test_img, 
