@@ -177,3 +177,6 @@ saved_images/*
 
 # checkpoints
 *.tar
+
+# DS Store files
+.DS_Store
